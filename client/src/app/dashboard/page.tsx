@@ -1,7 +1,7 @@
-import Dashboard from "@/components/ui/dashboard/dashboard";
+import DashboardContent from "@/components/ui/dashboard/dashboard";
 
 export default function DashboardPage () {
     return (
-        <Dashboard />
+        <DashboardContent />
     );
 }

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { setCredentials, setLoading, setError, clearError } from '../../../redux/userSlice';
 import { useTypedSelector } from '../../../lib/typedSelector';
 import { Check, X, AlertCircle } from 'lucide-react';
-import  withAuth from '@/hoc/withAuth';
+// import  withAuth from '@/hoc/withAuth';
 
 interface User {
   email: string;
@@ -97,7 +97,7 @@ const NotificationToast: React.FC<NotificationProps> = ({ message, type, onClose
   );
 };
 
-const SignupForm: React.FC = () => {
+const SignupPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { loading, error } = useTypedSelector((state) => state.auth);
@@ -143,7 +143,7 @@ const SignupForm: React.FC = () => {
       dispatch(setCredentials({
         user: data.signup.user,
         token: data.signup.token,
-        login: undefined,
+        login: 'string',
         errorMessage: '',
         errorCode: ''
       }));
@@ -289,4 +289,6 @@ const SignupForm: React.FC = () => {
   );
 };
 
-export default withAuth(SignupForm, { requireAuth: true, redirectPath: '/dashboard' });
+// export default withAuth(SignupForm, { requireAuth: true, redirectPath: '/dashboard' });
+
+export default SignupPage;

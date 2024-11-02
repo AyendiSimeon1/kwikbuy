@@ -2,15 +2,13 @@
 import { Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { AuthState } from '../types/auth';
+
 
 
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { isAuthenticated } = useSelector((state: AuthState) => state.auth);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -49,19 +47,19 @@ export default function Navbar() {
 
         
         <div className="space-x-4">
-        {isAuthenticated ? (
+        {/* {isAuthenticated ? (
           <Link
             href="/dashboard"
             className="bg-green-700 border-4 border-black hover:bg-green-600 text-white font-mono font-semibold py-2 px-4 rounded-full transition-colors duration-300 ease-in-out"
           >
             Dashboard
-          </Link>
-          ) : (
+          </Link> 
+          ) : (  )} */}
             <Link href='/signup' className='bg-green-800 border-3 border-black-200 hover:bg-green-500 font-mono text-white font-semibold py-3 px-5 rounded-full transition-colors duration-300 ease-in-out'>
                 Sign up
             </Link>
 
-          )}
+        
         </div>
 
         <button

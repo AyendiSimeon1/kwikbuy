@@ -32,6 +32,7 @@ const LoginComponent: React.FC = () => {
         },
         onCompleted: (data) => {
             console.log('Login successful:', data);
+            setFormError(data);
         },
     });
 

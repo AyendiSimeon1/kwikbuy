@@ -1,47 +1,45 @@
 "use client";
-import React, { useState } from 'react'
-import { MessageCircle, Users, CheckCircle, Clock, AlertCircle, Settings, LucideIcon } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+
+import React, { useState } from 'react';
+import { MessageCircle, Users, CheckCircle, Clock, AlertCircle, Settings, LucideIcon } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated, logout } from '@/redux/userSlice';
 import { MdOutlinePerson2 } from "react-icons/md";
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import withAuth from '@/hoc/withAuth';
+// import withAuth from '@/hoc/withAuth';
 
 interface Feature {
-  id: 'broadcast' | 'template' | 'tracking' | 'queue' | 'error' | 'settings'
-  title: string
-  icon: LucideIcon
-  description: string
-  color: string
+  id: 'broadcast' | 'template' | 'tracking' | 'queue' | 'error' | 'settings';
+  title: string;
+  icon: LucideIcon;
+  description: string;
+  color: string;
 }
 
 interface FeatureContentProps {
-  id: Feature['id']
+  id: Feature['id'];
 }
 
 interface FormState {
-  templateName: string
-  recipients: string
-  parameters: string
+  templateName: string;
+  recipients: string;
+  parameters: string;
 }
 
-const Dashboard = () => {
-
+const DashboardContent = () => {
   const dispatch = useDispatch();
-  const navigate = useRouter();
-  const isAuthenticated: boolean  = useSelector(selectIsAuthenticated);
-  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)
+  const router = useRouter();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const [formState, setFormState] = useState<FormState>({
     templateName: '',
     recipients: '',
     parameters: ''
   });
- 
-
 
   const features: Feature[] = [
     {
@@ -86,18 +84,18 @@ const Dashboard = () => {
       description: 'Configure API keys and preferences',
       color: 'bg-gray-500'
     }
-  ]
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormState(prev => ({
       ...prev,
       [name]: value
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const response = await fetch('/api/broadcast', {
         method: 'POST',
@@ -105,32 +103,30 @@ const Dashboard = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formState),
-      })
-      if (!response.ok) throw new Error('Failed to send broadcast')
-      setSelectedFeature(null)
-      setFormState({ templateName: '', recipients: '', parameters: '' })
+      });
+      if (!response.ok) throw new Error('Failed to send broadcast');
+      setSelectedFeature(null);
+      setFormState({ templateName: '', recipients: '', parameters: '' });
     } catch (error) {
-      console.error('Broadcast error:', error)
+      console.error('Broadcast error:', error);
     }
-  }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate.push('/');
-  }
+    router.push('/');
+  };
 
   const FeatureContent: React.FC<FeatureContentProps> = ({ id }) => {
-    
     switch (id) {
       case 'broadcast':
         return (
           <div className="space-y-4">
             {isAuthenticated ? (
-      <p>Hello</p>
-    ) : (
-      <p>Hi</p>
-    ) }
-   
+              <p>Hello</p>
+            ) : (
+              <p>Hi</p>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Template Name</label>
@@ -168,25 +164,24 @@ const Dashboard = () => {
               <Button type="submit" className="w-full">Send Broadcast</Button>
             </form>
           </div>
-        )
+        );
       default:
-        return <div>Content for {id}</div>
+        return <div>Content for {id}</div>;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto">
         <header className="mb-8">
-         <div className='flex justify-between'>
+          <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-900">KwikBuy Dashboard</h1>
             <button onClick={handleLogout}>
-              <div className='rounded-full bg-gray-300 p-3'>
+              <div className="rounded-full bg-gray-300 p-3">
                 <MdOutlinePerson2 style={{ color: 'black', fontSize: '30px' }} />
               </div>
             </button>
-            
-          </div> 
+          </div>
           <p className="text-gray-600">Manage your messaging operations</p>
         </header>
 
@@ -228,11 +223,10 @@ const Dashboard = () => {
           </DialogContent>
         </Dialog>
       </div>
-
-    
     </div>
+  );
+};
 
-  )
-}
-
-export default withAuth(Dashboard, {requireAuth: true, redirectPath: '/login'});
+// Wrap the client component with withAuth
+// const Dashboard = withAuth(DashboardContent, { requireAuth: true, redirectPath: '/login' });
+export default DashboardContent;

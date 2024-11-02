@@ -8,7 +8,7 @@ const CTASection = () => {
           <h2 className="text-3xl font-bold">
             <span className="text-gray-900">Discover more.</span>
             <span className="text-gray-800">
-           WhatsApp, Facebook and Instagram's share of social media messaging is unrivaled. Harness it with one of the fastest growing WhatsApp Business Solution Providers.
+              WhatsApp, Facebook and Instagram&apos;s share of social media messaging is unrivaled. Harness it with one of the fastest growing WhatsApp Business Solution Providers.
             </span>
           </h2>
 

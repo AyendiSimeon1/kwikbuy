@@ -1,6 +1,3 @@
-"use client";
-
-// import { useRouter } from "next/navigation";
 import { useRouter } from 'next/router';
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -16,11 +13,10 @@ const withAuth = <P extends object>(
   options: WithAuthOptions
 ) => {
   const AuthenticatedComponent: React.FC<P> = (props) => {
-  
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
-    
+
     useEffect(() => {
       setMounted(true);
     }, []);
@@ -35,7 +31,7 @@ const withAuth = <P extends object>(
       if (shouldRedirect) {
         router.replace(options.redirectPath);
       }
-    }, [isAuthenticated, mounted]);
+    }, [isAuthenticated, mounted, router, options.redirectPath]); // Added `router` and `options.redirectPath`
 
     if (!mounted) return null;
 
