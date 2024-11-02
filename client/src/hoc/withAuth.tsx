@@ -15,11 +15,11 @@ const withAuth = <P extends object>(
   options: WithAuthOptions
 ) => {
   const AuthenticatedComponent: React.FC<P> = (props) => {
-    const state = useSelector((state) => state );
+  
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
-    console.log(state);
+    
     useEffect(() => {
       setMounted(true);
     }, []);

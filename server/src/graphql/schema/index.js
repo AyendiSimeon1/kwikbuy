@@ -27,8 +27,11 @@ type User {
 }
 
 type AuthData {
-  token: String!
-  user: User!
+  token: String
+  user: User
+  error: String
+  errorMessage: String
+  errorCode: String
 }
 
 type Query {

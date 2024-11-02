@@ -48,9 +48,23 @@ class App {
                 user: req.user,
             }),
             formatError: (error) => {
-                logger.error('GraphQL Error:', error);
-                return new Error(error.message);
-            },
+                const { message, extensions, locations, path } = error;
+                logger.error('GraphQL Error:', {
+                    message,
+                    locations,
+                    path,
+                    stack: error.stack
+                });
+                return new ApolloError(
+                    message || 'An unknown error occurred',
+                    extensions?.code || 'INTERNAL_SERVER_ERROR',
+                    {
+                        locations,
+                        path,
+                        code: extensions?.code || 'INTERNAL_SERVER_ERROR'
+                    }
+                );
+              },
         });
 
         await server.start();

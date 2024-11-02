@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const User = require('../../models/user.js');
 const secretKey = process.env.JWT_SECRET || 'yourSecretKey';
-
+const { ApolloServer } = require('apollo-server');
+const { ApolloError } = require('apollo-server-express');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const resolvers = {
@@ -20,7 +21,7 @@ const resolvers = {
             try {
                 const existingUser = await User.findOne({ email });
                 if (existingUser) {
-                    throw new Error('User already exists');
+                     new Error('User already exists');
                 }
 
                 const hashedPassword = await bcrypt.hash(password, 12);
@@ -43,34 +44,68 @@ const resolvers = {
                     token,
                     user: newUser
                 };
-            } catch (error) {
-                console.error(error);
-                throw new Error('Error during signup');
+            } catch (err) {
+                console.error(err);
+                return { error: "An error occurred", code: "SERVER_ERROR" };
             }
         },
         login: async (_, { email, password }) => {
             try {
-                const user = await User.findOne({ email });
-                if (!user) {
-                    throw new Error('User does not exist');
-                }
-
-                const isMatch = await bcrypt.compare(password, user.password);
-                if (!isMatch) {
-                    throw new Error('Invalid password');
-                }
-
-                const token = jwt.sign({ id: user.id }, secretKey, { expiresIn: '1h' });
-
+             
+    
+              const user = await User.findOne({ email: email.toLowerCase().trim() });
+              if (!user) {
                 return {
-                    token,
-                    user
-                };
+                    errorMessage: 'User not found',
+                    errorCode: 'USER_NOT_FOUND'
+                  };
+                // throw new ApolloError('User not found', 'USER_NOT_FOUND');
+              }
+       
+              const isMatch = await bcrypt.compare(password, user.password);
+              if (!isMatch) {
+                return {
+                    errorMessage: 'wrong password',
+                    errorCode: 'UINVALID_CREDENTIALS'
+                  };
+                // throw new ApolloError('Invalid credentials', 'INVALID_CREDENTIALS');
+              }
+        
+              // Generate token
+              const token = jwt.sign(
+                { 
+                  id: user.id,
+                  email: user.email
+                }, 
+                secretKey, 
+                { 
+                  expiresIn: '1h',
+                  algorithm: 'HS256'
+                }
+              );
+        
+              // Return success response
+              return {
+                token,
+                user: {
+                  id: user.id,
+                  email: user.email,
+                  // Don't send password or other sensitive fields
+                },
+                errorMessage: null,
+                errorCode: null
+              };
+        
             } catch (error) {
-                console.error(error);
-                throw new Error('Error during login');
+             
+              console.error('Login error:', error);
+        
+              return {
+                errorMessage: 'An internal error occurred',
+                errorCode: 'INTERNAL_SERVER_ERROR'
+              };
             }
-        },
+          }
         // googleLogin: async (_, { token }) => {
         //     try {
         //         const ticket = await client.verifyIdToken({
