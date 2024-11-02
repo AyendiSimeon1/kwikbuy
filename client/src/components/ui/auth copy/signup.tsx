@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Link from 'next/link';
 
 export default function SignupPage() {
@@ -9,7 +9,7 @@ export default function SignupPage() {
     lastName: '',
   });
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value }  = e.target;
     setFormData(prev => ({
       ...prev,
@@ -17,16 +17,16 @@ export default function SignupPage() {
     }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here
+
     console.log('Form submitted:', formData);
   };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-sm p-8">
-        {/* Logo */}
+    
         <div className="flex justify-start mb-6">
           <svg className="w-8 h-8" viewBox="0 0 24 24">
             <path

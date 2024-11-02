@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useRouter } from 'next/router';
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { selectIsAuthenticated } from "@/redux/userSlice";

@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import Navbar from "@/components/ui/Navbar";
 import Hero from '@/components/ui/Hero';
 import LogoSlider from "@/components/ui/Slides";
@@ -12,7 +12,7 @@ export default function Home() {
     <div>
       <Navbar />
       <Hero />
-      {/* <LogoSlider /> */}
+      <LogoSlider />
       <BroadcastFeature />
       <ChatbotFeature />
       <CTASection />

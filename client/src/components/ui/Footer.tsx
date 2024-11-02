@@ -4,17 +4,17 @@ import { Twitter, Instagram, Facebook } from'react-feather';
 const Footer = () => {
     const currentYear = new Date().getFullYear();
     const footerLinks = {
-        company: [
+        Company: [
             { name: 'About Us', link: '/about' },
             { name: 'Contact', link: '/contact' },
             { name: 'Careers', link: '/careers' },
         ],
-        resources: [
+        Resources: [
             { name: 'Documentation', link: '/docs' },
             { name: 'Blog', link: '/blog' },
             { name: 'Help Center', link: '/help-center' },
         ],
-        legal: [
+        Legal: [
             { name: 'Terms of Service', link: '/terms-of-service' },
             { name: 'Privacy Policy', link: '/privacy-policy' },
             { name: 'Cookie Policy', link: '/cookie-policy' },
@@ -30,7 +30,7 @@ const Footer = () => {
     return (
         <footer className='bg-gray-900 text-gray-300'>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-                <div className='grid grid-cols-1 md:grid-cols-4 gap-8'>
+                <div className='grid grid-cols-1 md:grid-cols-4 gap-8 pt-5'>
                     <div className='space-y-4'>
                         <h2 className='text-white text-xl font-bold'>
                             KwikBuy

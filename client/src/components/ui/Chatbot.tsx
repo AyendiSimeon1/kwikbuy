@@ -93,7 +93,7 @@ const ChatbotFeature = () => {
             {/* Secondary Chat Window */}
             <div className="absolute top-1/2 right-0 transform translate-x-20 -translate-y-1/2">
               <div className="bg-white rounded-xl shadow-lg p-4 w-48">
-                <img src="/api/placeholder/160/120" alt="Handshake" className="w-full h-20 object-cover rounded mb-2" />
+                {/* <img src="/api/placeholder/160/120" alt="Handshake" className="w-full h-20 object-cover rounded mb-2" /> */}
                 <p className="text-xs text-gray-600">
                   Winner Real Estate was established in 2015 and has been creating a real estate revolution with their chain of view across the country and...
                 </p>

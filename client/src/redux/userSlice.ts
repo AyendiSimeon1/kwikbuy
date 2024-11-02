@@ -1,43 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState, LoginResponse, User } from '../components/types/auth';
-// import { RootState } from '@reduxjs/toolkit/query';
+
 
 export interface RootState {
   auth: AuthState
 }
 
-const getInitialUser = (): User | null => {
-  if (typeof window === 'undefined') return null;
-  
-  const storedUser = localStorage.getItem('user');
-  if (!storedUser) return null;
-  
-  try {
-    return JSON.parse(storedUser) as User;
-  } catch {
-    localStorage.removeItem('user');
-    return null;
-  }
-};
-
-const getInitialToken = (): string | null => {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('token');
-};
 
 
-
-const initialState: AuthState = {
+export const initialState: AuthState = {
   user: null,
   token: null,
   loading: false,
   error: null
 };
 
-interface CredentialsPayload {
-  user: User;
-  token: string;
-}
 
 const authSlice = createSlice({
   name: 'auth',
@@ -93,5 +70,4 @@ export const {
 } = authSlice.actions;
 
 
-// export const { setCredentials, setLoading, setError, logout, clearError } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,5 +1,5 @@
 "use client";
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo//client';
 import { useState, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -143,7 +143,9 @@ const SignupForm: React.FC = () => {
       dispatch(setCredentials({
         user: data.signup.user,
         token: data.signup.token,
-        login: undefined
+        login: undefined,
+        errorMessage: '',
+        errorCode: ''
       }));
       setNotification({
         message: 'Account created successfully!',

@@ -1,12 +1,16 @@
 "use client";
+import { Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { AuthState } from '../types/auth';
+
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { isAuthenticated } = useSelector((state: any) => state.auth);
+  const { isAuthenticated } = useSelector((state: AuthState) => state.auth);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -16,50 +20,49 @@ export default function Navbar() {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         
         <div className="flex items-center space-x-2">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-        
-          </svg>
-          <span className="text-3xl font-bold text-green-700"> KwikBuy</span>
+         <Zap size={40} color='green'/> 
+          
+          <span className="text-3xl font-bold text-green-800 font-mono"> KwikBy</span>
         </div>
 
        
         <div className={`md:flex space-x-8 ${isOpen ? 'block' : 'hidden'}`}>
           <Link
             href="/pricing"
-            className="text-gray-700 semi-bold text-2xl hover:text-green-700 transition-colors duration-300 ease-in-out"
+            className="text-gray-700 semi-bold text-2xl hover:text-green-800 transition-colors duration-300 ease-in-out"
           >
             Pricing
           </Link>
           <Link
             href="/features"
-            className="text-gray-700 semi-bold text-2xl hover:text-green-500 transition-colors duration-300 ease-in-out"
+            className="text-gray-700 semi-bold text-2xl hover:text-green-500 transition-colors font-mono duration-300 ease-in-out"
           >
             Features
           </Link>
           <Link
             href="/resources"
-            className="text-gray-700 semi-bold text-2xl hover:text-green-500 transition-colors duration-300 ease-in-out"
+            className="text-gray-700 semi-bold text-2xl hover:text-green-500 font-mono transition-colors duration-300 ease-in-out"
           >
             Resources
           </Link>
         </div>
 
         
-        {/* <div className="space-x-4">
+        <div className="space-x-4">
         {isAuthenticated ? (
           <Link
             href="/dashboard"
-            className="bg-green-700 border-4 border-black hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300 ease-in-out"
+            className="bg-green-700 border-4 border-black hover:bg-green-600 text-white font-mono font-semibold py-2 px-4 rounded-full transition-colors duration-300 ease-in-out"
           >
             Dashboard
           </Link>
           ) : (
-            <Link href='/signup' className='bg-green-700 border-3 border-black hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300 ease-in-out'>
+            <Link href='/signup' className='bg-green-800 border-3 border-black-200 hover:bg-green-500 font-mono text-white font-semibold py-3 px-5 rounded-full transition-colors duration-300 ease-in-out'>
                 Sign up
             </Link>
 
           )}
-        </div> */}
+        </div>
 
         <button
           className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"

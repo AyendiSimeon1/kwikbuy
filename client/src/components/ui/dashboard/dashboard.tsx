@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import { MessageCircle, Users, CheckCircle, Clock, AlertCircle, Settings, LucideIcon } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,7 +30,7 @@ interface FormState {
 }
 
 const Dashboard = () => {
-  const { user, selectIs } = useSelector((state:any ) => state.auth);
+
   const dispatch = useDispatch();
   const navigate = useRouter();
   const isAuthenticated: boolean  = useSelector(selectIsAuthenticated);
@@ -40,7 +40,7 @@ const Dashboard = () => {
     recipients: '',
     parameters: ''
   });
-  console.log(user);
+ 
 
 
   const features: Feature[] = [

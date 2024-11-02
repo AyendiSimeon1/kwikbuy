@@ -15,7 +15,7 @@ export interface User {
 
 
 export interface LoginResponse {
-    login: any;
+    login: string;
     errorMessage: string;
     errorCode: string;
     token: string;

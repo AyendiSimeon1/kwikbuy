@@ -1,52 +1,62 @@
 "use client";
+import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import 'swiper/swiper-bundle.css';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import { Autoplay, FreeMode } from 'swiper/modules';
 
-export default function LogoSlider () {
+export default function LogoSlider() {
     const logos = [
-        '/logos/company1.png',
-        '/logos/company2.png',
-        '/logos/company3.png',
-        '/logos/company4.png',
-        '/logos/company5.png',
-        '/logos/company6.png',
-        '/logos/company7.png',
-        '/logos/company8.png',
+        '/hero/slider/paystack.png',
+        '/hero/slider/mono.png',
+        '/hero/slider/nomba.png',
+        '/hero/slider/klasha.png',
+        '/hero/slider/gene.png',
+        '/hero/slider/indrive.png'
     ];
-
-
 
     return (
         <section className='bg-white py-8'>
-            <h2 className='text-center text-2xl md: text-4xl font-bold mb-6'>
+            <h2 className='text-center text-2xl md:text-4xl font-bold mb-6'>
                 Trusted by Leading Companies 
             </h2>
             <Swiper
-                spaceBetween={50}
+                modules={[Autoplay, FreeMode]}
+                spaceBetween={30}
                 slidesPerView={5}
-                navigation
-                pagination={{ clickable: true }}
-                breakpoints = {{
-                    640 : {
-                        slidesPerView : 2,
-                        spaceBetween : 20
+                freeMode={true}
+                autoplay={{
+                    delay: 0,
+                    disableOnInteraction: false,
+                }}
+                speed={3000} 
+                loop={true}
+                breakpoints={{
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20
                     },
                     768: {
-                        slidesPerView : 3,
+                        slidesPerView: 3,
+                        spaceBetween: 30
                     },
-                    1024 : {
-                        slidesPerView : 4,
-                        spaceBetween : 40   
+                    1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 40   
                     },
-
                 }}
-                >
-                    {logos.map((logo) => (
-                        <SwiperSlide key={logo}>
-                            <img src={logo} alt='' className='w-32 h-32 rounded-full' />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                className="mySwiper"
+            >
+                {[...logos, ...logos].map((logo, index) => (
+                    <SwiperSlide key={index} className="flex items-center justify-center">
+                        <Image
+                            src={logo} 
+                            alt={`Partner logo ${index + 1}`} 
+                            className='w-32 h-32 rounded-full object-contain'
+                        />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </section>
     );
 }

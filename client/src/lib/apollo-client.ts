@@ -1,7 +1,7 @@
 'use client';
 
-import { ApolloClient, ApolloLink, InMemoryCache, createHttpLink } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+import { ApolloClient, InMemoryCache} from '@apollo/client';
+
 
 const client = new ApolloClient({
   uri: 'http://localhost:5000/graphql', 

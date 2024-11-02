@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
-import { FormErrors, LoginResponse } from '@/components/types/auth';
+import { FormErrors } from '@/components/types/auth';
 import Link from 'next/link';
 import { ClipLoader } from 'react-spinners';
 
