@@ -11,6 +11,13 @@ import { FormErrors, SignupFormData } from '@/components/types/auth';
 // import  withAuth from '@/hoc/withAuth';
 
 
+interface Response extends SignupFormData {
+  token: string;
+  user: { email: string;
+  username: string;
+  
+}
+}
 
 const SignupPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,8 +42,8 @@ const SignupPage: React.FC = () => {
       setError(error.message);
     },
     onCompleted: (data) => {
-      console.log('Login succesful:', data);
-      
+      console.log('Login succesful:', data.signup);
+      dispatch(setCredentials(data.signup));
     }
   });
 
@@ -72,9 +79,19 @@ const SignupPage: React.FC = () => {
         console.log('There was an error');
       } else {
         console.log('Mutation result:', data);
-      dispatch(setCredentials(data));
+        const token = data.token;
+        const email = data.signup.user.email;
+        const username = data.signup.user.username;
+        const response= {
+          token,
+          user: { email, username },
+          password: '',
+         
+        };
+        dispatch(setCredentials(response));
+      // dispatch(setCredentials(data.signup));
       setMessages('Your account have been created successfully');
-      router.push('/dashboard');
+       router.push('/dashboard');
 
       }
       
