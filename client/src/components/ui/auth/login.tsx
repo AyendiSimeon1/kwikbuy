@@ -61,14 +61,13 @@ const LoginComponent: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white rounded-lg shadow-sm p-8">
-                <h1 className="text-2xl font-normal text-gray-900 mb-8">Login</h1>
+        <div className="min-h-screen bg-gray-500 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md space-y-8 bg-white rounded-xl shadow-sm p-8">
+                <h1 className="text-3xl font-extrabold text-center text-gray-900 mb-8">Login</h1>
                 {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className='mt-8 space-y-6'>
                     <div className="space-y-4">
                         <div>
-                            <label htmlFor="email" className="block text-sm text-gray-700 mb-1">Email</label>
                             <input
                                 type="text"
                                 id="email"
@@ -82,7 +81,6 @@ const LoginComponent: React.FC = () => {
                             {formError.email && <div className="text-red-500 text-sm mt-1">{formError.email}</div>}
                         </div>
                         <div>
-                            <label htmlFor="password" className="block text-sm text-gray-700 mb-1">Password</label>
                             <input
                                 type="password"
                                 id="password"

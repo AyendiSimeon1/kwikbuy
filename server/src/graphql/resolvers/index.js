@@ -56,10 +56,9 @@ const resolvers = {
               const user = await User.findOne({ email: email.toLowerCase().trim() });
               if (!user) {
                 return {
-                    errorMessage: 'User not found',
-                    errorCode: 'USER_NOT_FOUND'
+                    errorMessage: 'User does not exist',
+                    errorCode: 501
                   };
-                // throw new ApolloError('User not found', 'USER_NOT_FOUND');
               }
        
               const isMatch = await bcrypt.compare(password, user.password);

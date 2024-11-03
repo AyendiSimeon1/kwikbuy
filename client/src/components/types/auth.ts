@@ -6,6 +6,7 @@ export interface User {
   }
   
   export interface AuthState {
+    [x: string]: any;
     user: User | null;
     token: string | null;
     loading: boolean;
@@ -36,6 +37,31 @@ export interface LoginVariables {
 export interface LoginFormErrors {
   email?: string;
   password?: string;
+}
+
+export interface FormErrors {
+  email?: string;
+  username?: string;
+  password?: string;
+}
+
+export interface SignupResponse {
+  signup: {
+    token: string;
+    user: User;
+  };
+}
+
+export interface SignupVariables {
+  email: string;
+  username: string;
+  password: string;
+}
+
+export interface SignupFormData {
+  email: string;
+  username: string;
+  password: string;
 }
 
 export interface FormErrors {
