@@ -33,6 +33,107 @@ type AuthData {
   errorMessage: String
   errorCode: String
 }
+type CreateTemplateResponse{
+  success: Boolean
+  message: String
+  error: String
+  errorCode: Number
+}
+  enum ComponentType {
+    HEADER
+    BODY
+    FOOTER
+    BUTTONS
+  }
+
+  enum ButtonType {
+    PHONE_NUMBER
+    URL
+  }
+
+  enum Category {
+    MARKETING
+    UTILITY
+    AUTHENTICATION
+  }
+
+  enum HeaderFormat {
+    TEXT
+    IMAGE
+    VIDEO
+    DOCUMENT
+  }
+
+  type HeaderExample {
+    header_handle: [String]
+  }
+
+  type BodyExample {
+    body_text: [[String!]!]
+  }
+
+  type Example {
+    header_handle: [String]
+    body_text: [[String!]!]
+  }
+
+  type Button {
+    type: ButtonType!
+    text: String!
+    phone_number: String
+    url: String
+    example: [String]
+  }
+
+  type Component {
+    type: ComponentType!
+    format: HeaderFormat
+    text: String
+    buttons: [Button]
+    example: Example
+  }
+
+  type Template {
+    name: String!
+    language: String!
+    category: Category!
+    components: [Component!]!
+    status: String
+    id: String
+  }
+
+  input ButtonInput {
+    type: ButtonType!
+    text: String!
+    phone_number: String
+    url: String
+    example: [String]
+  }
+
+  input ExampleInput {
+    header_handle: [String]
+    body_text: [[String!]!]
+  }
+
+  input ComponentInput {
+    type: ComponentType!
+    format: HeaderFormat
+    text: String
+    buttons: [ButtonInput]
+    example: ExampleInput
+  }
+
+  input CreateTemplateInput {
+    name: String!
+    language: String!
+    category: Category!
+    components: [ComponentInput!]!
+  }
+
+  type Query {
+    template(name: String!): Template
+    templates: [Template!]!
+  }
 
 type Query {
   me: User
@@ -46,6 +147,8 @@ type Mutation {
   signup(email: String!, username: String!, password: String!): AuthData!
   login(email: String!, password: String!): AuthData!
   signupGoogle(token: String!): AuthData!
+  createTemplate(input: CreateTemplateInput!): Template!
+  deleteTemplate(name: String!): Boolean!
   sendBroadcastMessage(input: BroadcastMessageInput!): BroadcastMessageResponse!
   createChatbot(input: ChatbotInput!): Chatbot!
   updateChatbotFlow(input: UpdateFlowInput!): ChatbotFlow!

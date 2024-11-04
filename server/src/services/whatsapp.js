@@ -4,7 +4,7 @@ const logger = require('../utils/logger');
 const RateLimiter = require('../utils/rate-limiter');
 const MessageQueue = require('../utils/message-queue');
 const redis = require('redis'); // Assuming redis is required
-
+const config = require('../config/index');
 class WhatsAppService {
     constructor() {
         this.axiosInstance = axios.create({
@@ -19,7 +19,69 @@ class WhatsAppService {
         });
         this.messageQueue = new MessageQueue({ redis, key: 'whatsapp_messages' });
     }
-
+    async createMessageTemplate(templateData) {
+        try {
+            const response = await this.axiosInstance.post({
+                url: '/me/message_templates',
+                params: {
+                    access_token: config.FB_ACCESS_TOKEN,
+                },
+                data: {
+                    template_data: templateData,
+                },
+            });
+            return {
+                success: true,
+                templateData: response.data
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error?.message || 'UNKNOWN ERROR',
+                errorCode: 500
+            }
+        }
+    }
+    async getAllTemplates () {
+        try {
+            const response = await this.axiosInstance.get({
+                url: '/me/message_templates',
+                params: {
+                    access_token: config.FB_ACCESS_TOKEN,
+                },
+            });
+            return {
+                success: true,
+                templates: response.data.data
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error?.message || 'UNKNOWN ERROR',
+                errorCode: 500
+            }
+        }
+    }
+    async deleteMessageTemplate (templateName) {
+        try {
+            const response = await this.axiosInstance.delete({
+                url: `/me/message_templates/${templateName}`,
+                params: {
+                    access_token: config.FB_ACCESS_TOKEN,
+                },
+            });
+            return {
+                success: true,
+                message: response.data.message
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error?.message || 'UNKNOWN ERROR',
+                errorCode: 500
+            }
+        }
+    }
     async sendBroadcastMessage(input) {
         const messageId = uuidv4();
         const recipientBatches = this._batchRecipients(input.recipients, 50);
