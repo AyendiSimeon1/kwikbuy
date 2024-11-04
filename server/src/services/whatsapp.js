@@ -5,10 +5,12 @@ const RateLimiter = require('../utils/rate-limiter');
 const MessageQueue = require('../utils/message-queue');
 const redis = require('redis'); // Assuming redis is required
 const config = require('../config/index');
+
+
 class WhatsAppService {
     constructor() {
         this.axiosInstance = axios.create({
-            baseURL: 'https://graph.facebook.com/v10.0',
+            baseURL: 'https://graph.facebook.com/v21.0/479470328580712',
             timeout: 10000,
         });
         this.rateLimiter = new RateLimiter({
@@ -21,25 +23,50 @@ class WhatsAppService {
     }
     async createMessageTemplate(templateData) {
         try {
-            const response = await this.axiosInstance.post({
-                url: '/me/message_templates',
-                params: {
-                    access_token: config.FB_ACCESS_TOKEN,
-                },
-                data: {
-                    template_data: templateData,
-                },
-            });
+            console.log(templateData);
+            const response = await this.axiosInstance.post(
+             '/message_templates', // endpoint path only
+             {
+                name: templateData.name,
+                language: templateData.language,
+                category: templateData.category,
+                components: templateData.components,
+            },
+                {
+                    params: {
+                        access_token: 'EAAMO9QD5ATQBOZBBRmyWChSZBGQ3UPxhZBXUg6wRnu7DXkg1yhMugxXPD4R7dZBX2SGIsNlz3XYE6CPCfKm9eFv76Pmmqnz2M1YgjSZC7FOSRB0Esb5ctWffGG1PrTVmTrqExaGt0jQP6mbCvddWoijfYWh2fyH1eSCH5bXfH2qgG8fOtLyhyjJmhb8h9pqHOzMHriNYUmqUA4XHwPXERVAvAaHwZD',
+                    },
+                }
+            );
             return {
                 success: true,
                 templateData: response.data
             };
         } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.error?.message || 'UNKNOWN ERROR',
-                errorCode: 500
+            // Log detailed error information
+            if (error.response) {
+                // Request was made and server responded
+                console.error('Error in createMessageTemplate:');
+                console.error('Status Code:', error.response.status);
+                console.error('Status Text:', error.response.statusText);
+                console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
+                console.error('Data:', JSON.stringify(error.response.data, null, 2));
+                
+                throw new ApolloError(
+                    error.response.data?.error?.message || 'Failed to create template',
+                    error.response.status
+                );
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error('No response received:', error.request);
+                throw new ApolloError('No response from WhatsApp API');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error setting up request:', error.message);
+                throw new ApolloError(error.message);
             }
+        } finally {
+            console.log('HI')
         }
     }
     async getAllTemplates () {
