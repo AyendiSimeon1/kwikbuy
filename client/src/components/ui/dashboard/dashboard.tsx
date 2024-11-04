@@ -1,16 +1,26 @@
 "use client"
 import DashboardHeader from './dashboardHeader';
 import Sidebar from './Siderbar';
-
+import DashboardHero from './dashboardHero';
 
 const DashboardPage = () => {
   
   return (
-    <div className='flex h-screen'>
+    <div>
+    <div className='flex h-screen overflow-hidden'>
     
       <Sidebar />
+      <div className='flex-1 flex flex-col'>
       <DashboardHeader />
-    </div>
+      </div>
+      {/* <main className="flex-1 p-4 overflow-y-auto bg-gray-50">
+      <DashboardHero />
+      </main> */}
+      
+      
+      </div>
+      
+      </div>
   )
 }
 

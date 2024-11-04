@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { User, Bell, Settings, Search } from 'lucide-react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,8 +9,9 @@ import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser } from '@/redux/userSlice';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { useRouter } from 'next/router';
+import { Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from '@mui/material';
+import DashboardHero from './dashboardHero';
+
 
 
 
@@ -31,9 +32,7 @@ const SearchBar = styled('div')(({ theme }) => ({
 
 const DashboardHeader = () => {
   const dispatch = useDispatch();
-
-  const router = useRouter();
-  const [selectValue, setSelectedValue] = useState('');
+  const [selectValue, setSelectedValue] = useState<string>('');
   const  user  = useSelector(selectCurrentUser);
   console.log(user?.email);
   const currentDate = new Date();
@@ -51,11 +50,12 @@ const DashboardHeader = () => {
     return 'Good Evening';
   };
 
-  const handleChange = (event: ) => {
+  const handleChange = (event: SelectChangeEvent<string>) => {
     setSelectedValue(event.target.value);
   }
 
   return (
+   <div>
     <div className="flex flex-col flex-grow">
     <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none' }}>
       <Toolbar>
@@ -68,20 +68,9 @@ const DashboardHeader = () => {
           </Typography>
         </div>
 
-        <SearchBar>
-          <InputBase
-            placeholder="Search..."
-            inputProps={{ 'aria-label': 'search' }}
-            style={{ padding: '8px', width: '200px' }}
-          />
-          <IconButton type="submit" aria-label="search">
-            <Search className="h-5 w-5 text-gray-400" />
-          </IconButton>
-        </SearchBar>
 
-        <FormControl fullWidth style={{ marginTop: 20 }}>
-          <InputLabel id='custom-select-label'>Select Month</InputLabel>
-          <Select
+        <FormControl style={{ marginTop: 20 }}>
+               <Select
             labelId="custom-select-label"
             id="custom-select"
             value={selectValue}
@@ -91,18 +80,8 @@ const DashboardHeader = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={1}>January</MenuItem>
-              <MenuItem value={2}>February</MenuItem>
-              <MenuItem value={3}>March</MenuItem>
-              <MenuItem value={4}>April</MenuItem>
-              <MenuItem value={5}>May</MenuItem>
-              <MenuItem value={6}>June</MenuItem>
-              <MenuItem value={7}>July</MenuItem>
-              <MenuItem value={8}>August</MenuItem>
-              <MenuItem value={9}>September</MenuItem>
-              <MenuItem value={10}>October</MenuItem>
-              <MenuItem value={11}>November</MenuItem>
-              <MenuItem value={12}>December</MenuItem>
+              <MenuItem value={1}>Logout</MenuItem>
+           
             </Select>
         </FormControl>
         <IconButton color="inherit">
@@ -111,14 +90,15 @@ const DashboardHeader = () => {
         <IconButton color="inherit">
           <Settings className="h-5 w-5 text-gray-600" />
         </IconButton>
-        <IconButton color="inherit">
-          <User className="h-5 w-5 text-gray-600" />
-          <span style={{ display: 'none',  }}>Profile</span>
-        </IconButton>
+      
       </Toolbar>
     </AppBar>
     <hr></hr>
     </div>
+   <div>
+     <DashboardHero />
+   </div>
+   </div>
   );
 };
 
