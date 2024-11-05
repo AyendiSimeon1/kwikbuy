@@ -7,6 +7,7 @@ import { setCredentials, setLoading, setError, clearError } from '../../../redux
 import { useTypedSelector } from '../../../lib/typedSelector';
 import { Check, X, AlertCircle } from 'lucide-react';
 import SIGNUP_MUTATION  from '@/mutations/auth';
+import Link from 'next/link';
 import { FormErrors, SignupFormData } from '@/components/types/auth';
 // import  withAuth from '@/hoc/withAuth';
 
@@ -159,7 +160,12 @@ const SignupPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <div>
+            <p>Already have an account?</p>
+            <Link href="/features">Login</Link>
+            </div>
+            
             <button
               type="submit"
               disabled={loading}
