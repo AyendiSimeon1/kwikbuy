@@ -1,288 +1,135 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-  scalar DateTime
-scalar JSON
+  type User {
+    _id: ID!
+    email: String!
+    username: String!
+    password: String!
+    createdAt: String!
+  }
 
-type FlowAnalytics {
-  totalVisits: Int!
-  completions: Int!
-  averageTimeSpent: Float!
-  conversionRate: Float!
-}
+  type AuthData {
+    token: String
+    user: User
+    error: String
+    errorMessage: String
+    errorCode: String
+  }
 
-input UpdateFlowInput {
-  flowId: ID!
-  nodes: [FlowNodeInput!]!
-  edges: [FlowEdgeInput!]!
-  startNode: ID!
-}
+  type CreateTemplateResponse {
+    success: Boolean
+    message: String
+    error: String
+    errorCode: String
+  }
 
-type User {
-  _id: ID!
-  email: String!
-  username: String!
-  password: String!
-  createdAt: String!
-}
+  enum ComponentType {
+    HEADER
+    BODY
+    FOOTER
+    BUTTONS
+  }
 
-type AuthData {
-  token: String
-  user: User
-  error: String
-  errorMessage: String
-  errorCode: String
-}
+  enum ButtonType {
+    PHONE_NUMBER
+    URL
+    QUICK_REPLY
+  }
 
-type Query {
-  me: User
-  getTemplates: [Template!]!
-  getChatbots(userId: ID!): [Chatbot!]!
-  getChatbotFlow(chatbotId: ID!): ChatbotFlow!
-  getFlowAnalytics(flowId: ID!): FlowAnalytics!
-}
+  enum Category {
+    MARKETING
+    UTILITY
+    AUTHENTICATION
+  }
 
-type Mutation {
-  signup(email: String!, username: String!, password: String!): AuthData!
-  login(email: String!, password: String!): AuthData!
-  signupGoogle(token: String!): AuthData!
-  sendBroadcastMessage(input: BroadcastMessageInput!): BroadcastMessageResponse!
-  createChatbot(input: ChatbotInput!): Chatbot!
-  updateChatbotFlow(input: UpdateFlowInput!): ChatbotFlow!
-  publishChatbot(chatbotId: ID!): PublishResult!
-  toggleChatbotStatus(chatbotId: ID!, active: Boolean!): Chatbot!
-}
+  enum HeaderFormat {
+    TEXT
+    IMAGE
+    VIDEO
+    DOCUMENT
+  }
 
-type Template {
-  name: String!
-  status: String!
-  category: String!
-  language: String!
-}
+  type HeaderExample {
+    header_text: [String]
+  }
 
-input BroadcastMessageInput {
-  templateName: String!
-  templateLanguage: String!
-  recipients: [RecipientInput!]!
-  parameters: [TemplateParameterInput!]!
-  scheduledTime: DateTime!
-}
+  type BodyExample {
+    body_text: [[String!]!]
+  }
 
-input RecipientInput {
-  phoneNumber: String!
-  customParameters: JSON
-}
+  type Example {
+    header_text: [String]
+    body_text: [[String!]!]
+  }
 
-input TemplateParameterInput {
-  type: TemplateParameterType!
-  index: Int!
-  value: String!
-}
+  type Button {
+    type: ButtonType!
+    text: String!
+    phone_number: String
+    url: String
+    example: [String]
+  }
 
-enum TemplateParameterType {
-  BODY
-  HEADER
-  BUTTON
-}
+  type Component {
+    type: ComponentType!
+    format: HeaderFormat
+    text: String
+    buttons: [Button]
+    example: Example
+  }
 
-type BroadcastMessageResponse {
-  successful: [MessageResult!]!
-  failed: [MessageError!]!
-  messageId: ID!
-  status: BroadcastStatus!
-}
+  type Template {
+    name: String!
+    language: String!
+    category: Category!
+    components: [Component!]!
+    status: String
+    id: String
+  }
 
-type MessageResult {
-  recipientPhone: String!
-  whatsappMessageId: String!
-  status: MessageStatus!
-}
+  input ButtonInput {
+    type: ButtonType!
+    text: String!
+    phone_number: String
+    url: String
+    example: [String]
+  }
 
-type MessageError {
-  recipientPhone: String!
-  error: String!
-  code: String!
-}
+  input ExampleInput {
+    header_text: [String]
+    body_text: [[String!]!]
+  }
 
-enum BroadcastStatus {
-  SCHEDULED
-  IN_PROGRESS
-  COMPLETED
-  FAILED
-}
+  input ComponentInput {
+    type: ComponentType!
+    format: HeaderFormat
+    text: String
+    buttons: [ButtonInput]
+    example: ExampleInput
+  }
 
-enum MessageStatus {
-  SENT
-  DELIVERED
-  READ
-  FAILED
-}
+  input CreateTemplateInput {
+    name: String!
+    language: String!
+    category: Category!
+    components: [ComponentInput!]!
+  }
 
-type Chatbot {
-  id: ID!
-  name: String!
-  description: String
-  status: ChatbotStatus!
-  flow: ChatbotFlow!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  analytics: ChatbotAnalytics!
-}
+  type Query {
+    template(name: String!): Template
+    templates: [Template!]!
+    me: User
+    getTemplates: [Template!]!
+  }
 
-type ChatbotFlow {
-  id: ID!
-  nodes: [FlowNode!]!
-  edges: [FlowEdge!]!
-  startNode: ID!
-}
-
-type FlowNode {
-  id: ID!
-  type: NodeType!
-  data: NodeData!
-  position: Position!
-}
-
-type FlowEdge {
-  id: ID!
-  source: ID!
-  target: ID!
-  condition: String
-}
-
-type NodeData {
-  title: String!
-  content: String
-  buttons: [Button!]
-  mediaUrl: String
-  variables: [String!]
-  conditions: [Condition!]
-}
-
-type Button {
-  id: ID!
-  text: String!
-  value: String!
-  action: ButtonAction!
-}
-
-type Position {
-  x: Float!
-  y: Float!
-}
-
-type Condition {
-  variable: String!
-  operator: ConditionOperator!
-  value: String!
-}
-
-type ChatbotAnalytics {
-  totalUsers: Int!
-  activeUsers: Int!
-  messagesSent: Int!
-  messagesReceived: Int!
-  completionRate: Float!
-  averageResponseTime: Float!
-  popularFlows: [PopularFlow!]!
-}
-
-type PopularFlow {
-  nodeId: ID!
-  visits: Int!
-  completions: Int!
-}
-
-type PublishResult {
-  success: Boolean!
-  chatbotId: ID!
-  deploymentUrl: String
-  errors: [String!]
-}
-
-input ChatbotInput {
-  name: String!
-  description: String
-  flow: FlowInput
-}
-
-input FlowInput {
-  nodes: [FlowNodeInput!]!
-  edges: [FlowEdgeInput!]!
-  startNode: ID!
-}
-
-input FlowNodeInput {
-  id: ID!
-  type: NodeType!
-  data: NodeDataInput!
-  position: PositionInput!
-}
-
-input NodeDataInput {
-  title: String!
-  content: String
-  buttons: [ButtonInput!]
-  mediaUrl: String
-  variables: [String!]
-  conditions: [ConditionInput!]
-}
-
-input ButtonInput {
-  id: ID!
-  text: String!
-  value: String!
-  action: ButtonAction!
-}
-
-input ConditionInput {
-  variable: String!
-  operator: ConditionOperator!
-  value: String!
-}
-
-input FlowEdgeInput {
-  id: ID!
-  source: ID!
-  target: ID!
-  condition: String
-}
-
-input PositionInput {
-  x: Float!
-  y: Float!
-}
-
-enum NodeType {
-  MESSAGE
-  QUESTION
-  CONDITION
-  ACTION
-  API_CALL
-  END
-}
-
-enum ButtonAction {
-  REPLY
-  URL
-  PHONE
-  NEXT_NODE
-}
-
-enum ConditionOperator {
-  EQUALS
-  NOT_EQUALS
-  CONTAINS
-  GREATER_THAN
-  LESS_THAN
-}
-
-enum ChatbotStatus {
-  DRAFT
-  PUBLISHED
-  INACTIVE
-}
-
+  type Mutation {
+    signup(email: String!, username: String!, password: String!): AuthData!
+    login(email: String!, password: String!): AuthData!
+    signupGoogle(token: String!): AuthData!
+    createTemplate(input: CreateTemplateInput): Template
+    deleteTemplate(name: String!): Boolean!
+  }
 `;
 
 module.exports = typeDefs;

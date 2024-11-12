@@ -1,12 +1,13 @@
 "use client";
 import { useMutation } from '@apollo//client';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { setCredentials, setLoading, setError, clearError } from '../../../redux/userSlice';
 import { useTypedSelector } from '../../../lib/typedSelector';
-import { Check, X, AlertCircle } from 'lucide-react';
+
 import SIGNUP_MUTATION  from '@/mutations/auth';
+import Link from 'next/link';
 import { FormErrors, SignupFormData } from '@/components/types/auth';
 // import  withAuth from '@/hoc/withAuth';
 
@@ -16,7 +17,7 @@ const SignupPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [messages, setMessages] = useState<string>('');
-  const { loading, error } = useTypedSelector((state) => state.auth);
+  const { loading } = useTypedSelector((state) => state.auth);
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: '',
@@ -35,8 +36,8 @@ const SignupPage: React.FC = () => {
       setError(error.message);
     },
     onCompleted: (data) => {
-      console.log('Login succesful:', data);
-      
+      console.log('Login succesful:', data.signup);
+      dispatch(setCredentials(data.signup));
     }
   });
 
@@ -72,13 +73,23 @@ const SignupPage: React.FC = () => {
         console.log('There was an error');
       } else {
         console.log('Mutation result:', data);
-      dispatch(setCredentials(data));
+        const token = data.token;
+        const email = data.signup.user.email;
+        const username = data.signup.user.username;
+        const response= {
+          token,
+          user: { email, username },
+          password: '',
+         
+        };
+        dispatch(setCredentials(response));
+      // dispatch(setCredentials(data.signup));
       setMessages('Your account have been created successfully');
-      router.push('/dashboard');
+       router.push('/dashboard');
 
       }
       
-    } catch (err) {
+    } catch (error) {
       console.log("Error executing mutation:" , error)
       setMessages('There was an error');
       } finally {
@@ -142,7 +153,12 @@ const SignupPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <div>
+            <p>Already have an account?</p>
+            <Link href="/login">Login</Link>
+            </div>
+            
             <button
               type="submit"
               disabled={loading}

@@ -36,12 +36,13 @@ export default function Hero () {
                
                 </div>
             </div>
-            <div style={{ position: 'relative', width: '700px', height: '350px' }}>
+            <div style={{ position: 'relative'  }}>
                 <Image
                     src="/hero-business-image.jpg"
+                    width={700}
+                    height={350}
                     alt='hero'
-                    layout='fill' // Fills the container
-                    objectFit='cover' // Adjusts how the image fits within the container
+                    
                     className='rounded-lg shadow-lg '
                 />
             </div>

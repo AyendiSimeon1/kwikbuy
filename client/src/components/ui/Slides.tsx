@@ -51,6 +51,8 @@ export default function LogoSlider() {
                     <SwiperSlide key={index} className="flex items-center justify-center">
                         <Image
                             src={logo} 
+                            width={300}
+                            height={300}
                             alt={`Partner logo ${index + 1}`} 
                             className='w-32 h-32 rounded-full object-contain'
                         />

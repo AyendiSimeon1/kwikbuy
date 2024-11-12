@@ -6,7 +6,7 @@ const secretKey = process.env.JWT_SECRET || 'yourSecretKey';
 const { ApolloServer } = require('apollo-server');
 const { ApolloError } = require('apollo-server-express');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
+const WhatsAppService = require('../../services/whatsapp.js')
 const resolvers = {
     Query: {
         me: async (_, __, { user }) => {
@@ -21,7 +21,10 @@ const resolvers = {
             try {
                 const existingUser = await User.findOne({ email });
                 if (existingUser) {
-                     new Error('User already exists');
+                  return {
+                    errorMessage: 'User does not exist',
+                    errorCode: 501
+                  };
                 }
 
                 const hashedPassword = await bcrypt.hash(password, 12);
@@ -39,7 +42,6 @@ const resolvers = {
                     secretKey,
                     { expiresIn: '7d' }
                 );
-
                 return {
                     token,
                     user: newUser
@@ -64,13 +66,12 @@ const resolvers = {
               const isMatch = await bcrypt.compare(password, user.password);
               if (!isMatch) {
                 return {
-                    errorMessage: 'wrong password',
-                    errorCode: 'UINVALID_CREDENTIALS'
+                    errorMessage: 'The password is incorrect',
+                    errorCode: 502
                   };
-                // throw new ApolloError('Invalid credentials', 'INVALID_CREDENTIALS');
               }
         
-              // Generate token
+   
               const token = jwt.sign(
                 { 
                   id: user.id,
@@ -83,13 +84,12 @@ const resolvers = {
                 }
               );
         
-              // Return success response
               return {
                 token,
                 user: {
                   id: user.id,
                   email: user.email,
-                  // Don't send password or other sensitive fields
+                  username: user.username
                 },
                 errorMessage: null,
                 errorCode: null
@@ -104,42 +104,31 @@ const resolvers = {
                 errorCode: 'INTERNAL_SERVER_ERROR'
               };
             }
-          }
-        // googleLogin: async (_, { token }) => {
-        //     try {
-        //         const ticket = await client.verifyIdToken({
-        //             idToken: token,
-        //             audience: process.env.GOOGLE_CLIENT_ID
-        //         });
-
-        //         const { email_verified, email, name, picture } = ticket.getPayload();
-
-        //         if (!email_verified) {
-        //             throw new Error('Email not verified');
-        //         }
-
-        //         let user = await User.findOne({ email });
-        //         if (!user) {
-        //             user = new User({
-        //                 email,
-        //                 username: name,
-        //                 image: picture
-        //             });
-
-        //             await user.save();
-        //         }
-
-        //         const jwtToken = jwt.sign({ id: user._id }, secretKey, { expiresIn: '1h' });
-
-        //         return {
-        //             token: jwtToken,
-        //             user
-        //         };
-        //     } catch (error) {
-        //         console.error(error);
-        //         throw new Error('Error during Google login');
-        //     }
-        // }
+          },
+          createTemplate: async (_, { input }) => {
+            const whatsAppService = new WhatsAppService();
+            
+            try {
+              const result = await whatsAppService.createMessageTemplate(input);
+              if (result.success) {
+                return {
+                  id: result.templateData.id, // adjust according to response structure
+                  status: 'Template created successfully',
+                  message: 'Success',
+                };
+              } else {
+                return {
+                  success: false,
+                  error: result.error,
+                  errorCode: result.errorCode,
+                };
+              }
+            } catch (error) {
+              console.error("Error in createTemplate:", error);
+              throw new ApolloError('Failed to create WhatsApp template');
+            }
+          },
+       
     }
 };
 

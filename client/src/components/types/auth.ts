@@ -6,7 +6,7 @@ export interface User {
   }
   
   export interface AuthState {
-    [x: string]: any;
+   
     user: User | null;
     token: string | null;
     loading: boolean;
@@ -16,9 +16,9 @@ export interface User {
 
 
 export interface LoginResponse {
-    login: string;
-    errorMessage: string;
-    errorCode: string;
+    login?: string;
+    errorMessage?: string;
+    errorCode?: string;
     token: string;
     user: User;
   

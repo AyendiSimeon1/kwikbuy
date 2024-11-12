@@ -55,7 +55,7 @@ class App {
                     path,
                     stack: error.stack
                 });
-                return new ApolloError(
+                throw new Error(
                     message || 'An unknown error occurred',
                     extensions?.code || 'INTERNAL_SERVER_ERROR',
                     {
