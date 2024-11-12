@@ -27,7 +27,7 @@ const BroadcastFeature = () => {
         <h1 className="text-3xl font-bold text-center mb-12">Features</h1>
         
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Left side - Table */}
+         
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -57,7 +57,6 @@ const BroadcastFeature = () => {
             </div>
           </div>
 
-          {/* Right side - Features */}
           <div className="space-y-8">
             <h2 className="text-2xl font-bold mb-6">Broadcast</h2>
             <div className="space-y-4">

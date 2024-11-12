@@ -1,30 +1,23 @@
 "use client";
 import { useMutation } from '@apollo//client';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { setCredentials, setLoading, setError, clearError } from '../../../redux/userSlice';
 import { useTypedSelector } from '../../../lib/typedSelector';
-import { Check, X, AlertCircle } from 'lucide-react';
+
 import SIGNUP_MUTATION  from '@/mutations/auth';
 import Link from 'next/link';
 import { FormErrors, SignupFormData } from '@/components/types/auth';
 // import  withAuth from '@/hoc/withAuth';
 
 
-interface Response extends SignupFormData {
-  token: string;
-  user: { email: string;
-  username: string;
-  
-}
-}
 
 const SignupPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [messages, setMessages] = useState<string>('');
-  const { loading, error } = useTypedSelector((state) => state.auth);
+  const { loading } = useTypedSelector((state) => state.auth);
   
   const [formData, setFormData] = useState<SignupFormData>({
     email: '',
@@ -96,7 +89,7 @@ const SignupPage: React.FC = () => {
 
       }
       
-    } catch (err) {
+    } catch (error) {
       console.log("Error executing mutation:" , error)
       setMessages('There was an error');
       } finally {
@@ -163,7 +156,7 @@ const SignupPage: React.FC = () => {
           <div className="flex justify-between">
             <div>
             <p>Already have an account?</p>
-            <Link href="/features">Login</Link>
+            <Link href="/login">Login</Link>
             </div>
             
             <button

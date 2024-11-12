@@ -11,44 +11,71 @@ import {
   FormControl,
   InputLabel,
   IconButton,
-  Divider,
 } from '@mui/material';
 import { Plus as AddIcon, Trash2 as DeleteIcon } from 'lucide-react';
-import { Template, TemplateComponent, TemplateButton } from './templateTypes';
+
+interface TemplateComponent {
+  type: 'text' | 'image' | 'button' | 'list';
+  text?: string;
+  url?: string;
+  items?: string[];
+  style?: {
+    color?: string;
+    fontSize?: number;
+  };
+  buttons?: TemplateButton[];
+}
+
+interface TemplateButton {
+  type: 'URL' | 'PHONE_NUMBER';
+  text: string;
+  url?: string;
+  phone_number?: string;
+}
+
+interface Template {
+  name: string;
+  language: string;
+  category: 'MARKETING' | 'UTILITY' | 'AUTHENTICATION';
+  components: TemplateComponent[];
+}
+
+const INITIAL_COMPONENT: TemplateComponent = {
+  type: 'text',
+  text: '',
+};
+
+const INITIAL_BUTTON: TemplateButton = {
+  type: 'URL',
+  text: '',
+  url: '',
+};
 
 interface CreateTemplateFormProps {
   onSubmit: (template: Template) => void;
   onCancel: () => void;
 }
 
-const INITIAL_COMPONENT: TemplateComponent = {
-  type: 'BODY',
-  text: '',
-  example: { body_text: [[]] }
-};
-
-const INITIAL_BUTTON: TemplateButton = {
-  type: 'URL',
-  text: '',
-  url: ''
-};
-
 export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
   onSubmit,
-  onCancel
+  onCancel,
 }) => {
   const [template, setTemplate] = useState<Template>({
     name: '',
     language: 'en_US',
     category: 'MARKETING',
-    components: [{ ...INITIAL_COMPONENT }]
+    components: [{ ...INITIAL_COMPONENT }],
   });
 
-  const handleComponentChange = (index: number, field: keyof TemplateComponent, value: any) => {
+  const handleComponentChange = <T extends keyof TemplateComponent>(
+    index: number,
+    field: T,
+    value: TemplateComponent[T]
+  ) => {
     const updatedComponents = [...template.components];
     updatedComponents[index] = {
       ...updatedComponents[index],
-      [field]: value
+      [field]: value,
     };
     setTemplate({ ...template, components: updatedComponents });
   };
@@ -69,7 +96,7 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
   const addComponent = () => {
     setTemplate({
       ...template,
-      components: [...template.components, { ...INITIAL_COMPONENT }]
+      components: [...template.components, { ...INITIAL_COMPONENT }],
     });
   };
 
@@ -96,7 +123,11 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
         <Typography variant="h6" gutterBottom>
           Create Template
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+        >
           <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(2, 1fr)' }}>
             <TextField
               label="Template Name"
@@ -110,7 +141,12 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
               <Select
                 value={template.category}
                 label="Category"
-                onChange={(e) => setTemplate({ ...template, category: e.target.value as Template['category'] })}
+                onChange={(e) =>
+                  setTemplate({
+                    ...template,
+                    category: e.target.value as Template['category'],
+                  })
+                }
               >
                 <MenuItem value="MARKETING">Marketing</MenuItem>
                 <MenuItem value="UTILITY">Utility</MenuItem>
@@ -127,23 +163,20 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
                   <Select
                     value={component.type}
                     label="Component Type"
-                    onChange={(e) => handleComponentChange(index, 'type', e.target.value)}
+                    onChange={(e) => handleComponentChange(index, 'type', e.target.value as TemplateComponent['type'])}
                   >
-                    <MenuItem value="HEADER">Header</MenuItem>
-                    <MenuItem value="BODY">Body</MenuItem>
-                    <MenuItem value="FOOTER">Footer</MenuItem>
-                    <MenuItem value="BUTTONS">Buttons</MenuItem>
+                    <MenuItem value="text">Text</MenuItem>
+                    <MenuItem value="image">Image</MenuItem>
+                    <MenuItem value="button">Button</MenuItem>
+                    <MenuItem value="list">List</MenuItem>
                   </Select>
                 </FormControl>
-                <IconButton 
-                  onClick={() => removeComponent(index)}
-                  sx={{ color: 'error.main' }}
-                >
+                <IconButton onClick={() => removeComponent(index)} sx={{ color: 'error.main' }}>
                   <DeleteIcon />
                 </IconButton>
               </Box>
 
-              {component.type !== 'BUTTONS' && (
+              {component.type !== 'button' && (
                 <TextField
                   label="Text"
                   value={component.text || ''}
@@ -154,7 +187,7 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
                 />
               )}
 
-              {component.type === 'BUTTONS' && (
+              {component.type === 'button' && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {component.buttons?.map((button, buttonIndex) => (
                     <Box key={buttonIndex} sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(3, 1fr)' }}>
@@ -163,7 +196,9 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
                         <Select
                           value={button.type}
                           label="Button Type"
-                          onChange={(e) => handleButtonChange(index, buttonIndex, 'type', e.target.value as string)}
+                          onChange={(e) =>
+                            handleButtonChange(index, buttonIndex, 'type', e.target.value as TemplateButton['type'])
+                          }
                         >
                           <MenuItem value="URL">URL</MenuItem>
                           <MenuItem value="PHONE_NUMBER">Phone Number</MenuItem>
@@ -176,13 +211,15 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
                       />
                       <TextField
                         label={button.type === 'URL' ? 'URL' : 'Phone Number'}
-                        value={button.type === 'URL' ? button.url : button.phone_number}
-                        onChange={(e) => handleButtonChange(
-                          index,
-                          buttonIndex,
-                          button.type === 'URL' ? 'url' : 'phone_number',
-                          e.target.value
-                        )}
+                        value={button.type === 'URL' ? button.url : button.phone_number || ''}
+                        onChange={(e) =>
+                          handleButtonChange(
+                            index,
+                            buttonIndex,
+                            button.type === 'URL' ? 'url' : 'phone_number',
+                            e.target.value
+                          )
+                        }
                       />
                     </Box>
                   ))}
@@ -199,11 +236,7 @@ export const CreateTemplateForm: React.FC<CreateTemplateFormProps> = ({
             </Box>
           ))}
 
-          <Button
-            startIcon={<AddIcon />}
-            onClick={addComponent}
-            variant="outlined"
-          >
+          <Button startIcon={<AddIcon />} onClick={addComponent} variant="outlined">
             Add Component
           </Button>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { AppBar, Tabs, Tab, Box, Typography, Button, Card, CardContent, TextField, IconButton, Divider } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Search as SearchIcon, Edit2 as AddIcon } from 'lucide-react';
+import { AppBar, Tabs, Tab, Box, Typography} from '@mui/material';
+// import { Edit as EditIcon, Delete as DeleteIcon } from 'lucide-react';
 import TemplateManagement from './Template/templateManagement';
 import WhatsAppMessaging from './Message/message';
 import UserAnalytics from './Analytics/analytics';
@@ -11,11 +11,11 @@ interface TabPanelProps {
   value: number;
 }
 
-interface Template {
-  id: number;
-  name: string;
-  description: string;
-}
+// interface Template {
+//   id: number;
+//   name: string;
+//   description: string;
+// }
 
 const TabPanel: React.FC<TabPanelProps> = (props) => {
   const { children, value, index, ...other } = props;
@@ -46,133 +46,133 @@ const a11yProps = (index: number) => {
 
 const DashboardHero: React.FC = () => {
   const [value, setValue] = useState(0);
-  const [templates, setTemplates] = useState<Template[]>([
-    { id: 1, name: 'Invoice Template', description: 'Standard invoice format' },
-    { id: 2, name: 'Report Template', description: 'Monthly report format' },
-  ]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
+  // const [templates, setTemplates] = useState<Template[]>([
+  //   { id: 1, name: 'Invoice Template', description: 'Standard invoice format' },
+  //   { id: 2, name: 'Report Template', description: 'Monthly report format' },
+  // ]);
+  // // const [searchQuery, setSearchQuery] = useState('');
+  // const [isCreating, setIsCreating] = useState(false);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const handleDeleteTemplate = (id: number) => {
-    setTemplates(templates.filter(template => template.id !== id));
-  };
+  // const handleDeleteTemplate = (id: number) => {
+  //   setTemplates(templates.filter(template => template.id !== id));
+  // };
 
-  const TemplateCard: React.FC<{ template: Template }> = ({ template }) => (
-    <Card sx={{ width: '100%', mb: 2 }}>
-      <CardContent>
+  // const TemplateCard: React.FC<{ template: Template }> = ({ template }) => (
+  //   <Card sx={{ width: '100%', mb: 2 }}>
+  //     <CardContent>
        
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              {template.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {template.description}
-            </Typography>
-          </Box>
-          <Box display="flex" gap={1}>
-            <IconButton
-              size="small"
-              sx={{ color: 'primary.main' }}
-            >
-              <EditIcon className="h-5 w-5" />
-            </IconButton>
-            <IconButton
-              size="small"
-              onClick={() => handleDeleteTemplate(template.id)}
-              sx={{ color: 'error.main' }}
-            >
-              <DeleteIcon className="h-5 w-5" />
-            </IconButton>
-          </Box>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+  //       <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+  //         <Box>
+  //           <Typography variant="h6" gutterBottom>
+  //             {template.name}
+  //           </Typography>
+  //           <Typography variant="body2" color="text.secondary">
+  //             {template.description}
+  //           </Typography>
+  //         </Box>
+  //         <Box display="flex" gap={1}>
+  //           <IconButton
+  //             size="small"
+  //             sx={{ color: 'primary.main' }}
+  //           >
+  //             <EditIcon className="h-5 w-5" />
+  //           </IconButton>
+  //           <IconButton
+  //             size="small"
+  //             onClick={() => handleDeleteTemplate(template.id)}
+  //             sx={{ color: 'error.main' }}
+  //           >
+  //             <DeleteIcon className="h-5 w-5" />
+  //           </IconButton>
+  //         </Box>
+  //       </Box>
+  //     </CardContent>
+  //   </Card>
+  // );
 
-  const CreateTemplateForm: React.FC = () => (
-    <Card sx={{ width: '100%', mb: 2 }}>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Create New Template
-        </Typography>
-        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField
-            label="Template Name"
-            variant="outlined"
-            fullWidth
-            size="small"
-          />
-          <TextField
-            label="Description"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={3}
-            size="small"
-          />
-          <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-            <Button
-              variant="outlined"
-              onClick={() => setIsCreating(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              type="submit"
-            >
-              Create Template
-            </Button>
-          </Box>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+  // const CreateTemplateForm: React.FC = () => (
+  //   <Card sx={{ width: '100%', mb: 2 }}>
+  //     <CardContent>
+  //       <Typography variant="h6" gutterBottom>
+  //         Create New Template
+  //       </Typography>
+  //       <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+  //         <TextField
+  //           label="Template Name"
+  //           variant="outlined"
+  //           fullWidth
+  //           size="small"
+  //         />
+  //         <TextField
+  //           label="Description"
+  //           variant="outlined"
+  //           fullWidth
+  //           multiline
+  //           rows={3}
+  //           size="small"
+  //         />
+  //         <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+  //           <Button
+  //             variant="outlined"
+  //             onClick={() => setIsCreating(false)}
+  //           >
+  //             Cancel
+  //           </Button>
+  //           <Button
+  //             variant="contained"
+  //             type="submit"
+  //           >
+  //             Create Template
+  //           </Button>
+  //         </Box>
+  //       </Box>
+  //     </CardContent>
+  //   </Card>
+  // );
 
-  const TemplatesSection: React.FC = () => (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5">
-          Templates
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon className="h-4 w-4" />}
-          onClick={() => setIsCreating(true)}
-        >
-          Create Template
-        </Button>
-      </Box>
+  // const TemplatesSection: React.FC = () => (
+  //   <Box>
+  //     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+  //       <Typography variant="h5">
+  //         Templates
+  //       </Typography>
+  //       <Button
+  //         variant="contained"
+  //         startIcon={<AddIcon className="h-4 w-4" />}
+  //         onClick={() => setIsCreating(true)}
+  //       >
+  //         Create Template
+  //       </Button>
+  //     </Box>
 
-      <TextField
-        fullWidth
-        placeholder="Search templates..."
-        variant="outlined"
-        size="small"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        sx={{ mb: 3 }}
-        InputProps={{
-          startAdornment: <SearchIcon className="h-4 w-4 mr-2 text-gray-400" />,
-        }}
-      />
+  //     <TextField
+  //       fullWidth
+  //       placeholder="Search templates..."
+  //       variant="outlined"
+  //       size="small"
+  //       value={searchQuery}
+  //       onChange={(e) => setSearchQuery(e.target.value)}
+  //       sx={{ mb: 3 }}
+  //       InputProps={{
+  //         startAdornment: <SearchIcon className="h-4 w-4 mr-2 text-gray-400" />,
+  //       }}
+  //     />
 
-      {isCreating && <CreateTemplateForm />}
+  //     {isCreating && <CreateTemplateForm />}
 
-      {templates
-        .filter(template => 
-          template.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .map(template => (
-          <TemplateCard key={template.id} template={template} />
-        ))}
-    </Box>
-  );
+  //     {templates
+  //       .filter(template => 
+  //         template.name.toLowerCase().includes(searchQuery.toLowerCase())
+  //       )
+  //       .map(template => (
+  //         <TemplateCard key={template.id} template={template} />
+  //       ))}
+  //   </Box>
+  // );
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -184,9 +184,9 @@ const DashboardHero: React.FC = () => {
           sx={{
             bgcolor: 'background.paper',
             '& .MuiTab-root': {
-              color: 'text.primary',
+              color: 'green',
               '&.Mui-selected': {
-                color: 'primary.main',
+                color: 'green',
                 fontWeight: 'bold',
               },
             },

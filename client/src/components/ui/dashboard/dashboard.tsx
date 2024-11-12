@@ -1,7 +1,7 @@
 "use client"
 import DashboardHeader from './dashboardHeader';
 import Sidebar from './Siderbar';
-import DashboardHero from './dashboardHero';
+
 
 const DashboardPage = () => {
   

@@ -6,13 +6,14 @@ export interface TemplateButton {
     example?: string[];
   }
   
-  export interface TemplateComponent {
+export interface TemplateComponent {
     type: 'HEADER' | 'BODY' | 'FOOTER' | 'BUTTONS';
-    format?: 'IMAGE' | 'TEXT';
     text?: string;
-    example?: {
-      header_handle?: string[];
-      body_text?: any[][];
+    url?: string;
+    items?: string[];
+    style?: {
+      color?: string;
+      fontSize?: number;
     };
     buttons?: TemplateButton[];
   }

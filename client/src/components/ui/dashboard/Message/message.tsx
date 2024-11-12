@@ -11,7 +11,8 @@ import {
   ListItemText,
   Box,
   Chip,
-  IconButton
+  
+  Grid
 } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import Papa from 'papaparse';
@@ -32,6 +33,11 @@ interface SentMessage {
   text: {
     body: string;
   };
+}
+
+interface CSVRow {
+  phone_number: string;
+  [key: string]: string;
 }
 
 const WhatsAppMessaging: React.FC = () => {
@@ -59,8 +65,8 @@ const WhatsAppMessaging: React.FC = () => {
         download: true,
         header: true,
         skipEmptyLines: true,
-        complete: (results:any ) => {
-          const newNumbers = results.data.map((row: any) => row.phone_number);
+        complete: (results: Papa.ParseResult<CSVRow>) => {
+          const newNumbers = results.data.map((row: { phone_number: string; }) => row.phone_number);
           setRecipientNumbers([...recipientNumbers, ...newNumbers]);
         }
       });
@@ -99,96 +105,108 @@ const WhatsAppMessaging: React.FC = () => {
   };
 
   return (
-    <><Card>
+    <Grid container spacing={2} justifyContent="center">
+      <Grid item xs={12} sm={8} md={6}>
+        <Card>
           <CardContent>
-              <Typography variant="h5" gutterBottom>
-                  Send WhatsApp Message
-              </Typography>
-              <Box display="flex" alignItems="center" marginBottom={2}>
-                  <TextField
-                      label="Recipient Phone Number"
-                      variant="outlined"
-                      value={newRecipientNumber}
-                      onChange={(e) => setNewRecipientNumber(e.target.value)}
-                      fullWidth
-                      margin="normal" />
-                  <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={addRecipientNumber}
-                      style={{ marginLeft: '8px' }}
-                  >
-                      Add
-                  </Button>
-              </Box>
-              <Box marginBottom={2}>
-                  {recipientNumbers.map((number, index) => (
-                      <Chip
-                          key={index}
-                          label={number}
-                          onDelete={() => removeRecipientNumber(index)}
-                          deleteIcon={<DeleteIcon />}
-                          style={{ marginRight: '8px', marginBottom: '8px' }} />
-                  ))}
-              </Box>
-              <TextField
-                  label="Message Content"
-                  variant="outlined"
-                  value={messageContent}
-                  onChange={(e) => setMessageContent(e.target.value)}
-                  fullWidth
-                  multiline
-                  rows={4}
-                  margin="normal" />
-              <Box display="flex" justifyContent="space-between" marginTop={2}>
-                  <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={sendWhatsAppMessage}
-                      disabled={recipientNumbers.length === 0}
-                  >
-                      Send Message
-                  </Button>
-                  <Button
-                      variant="contained"
-                      color="secondary"
-                      component="label"
-                  >
-                      Import from CSV
-                      <input
-                          type="file"
-                          accept=".csv"
-                          onChange={importRecipientsFromCSV}
-                          style={{ display: 'none' }} />
-                  </Button>
-              </Box>
+            <Typography variant="h5" gutterBottom>
+              All Sent Messages
+            </Typography>
+            <Box marginBottom={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={getAllMessages}
+                fullWidth
+              >
+                Fetch Messages
+              </Button>
+            </Box>
+            <Box 
+              style={{ maxHeight: '300px', overflowY: 'auto' }} // Set max height and enable vertical scrolling
+            >
+              <List>
+                {allMessages.map((message, index) => (
+                  <ListItem key={index}>
+                    <ListItemText
+                      primary={`Recipient: ${message.to}`}
+                      secondary={`Message: ${message.text.body}`} />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           </CardContent>
-      </Card><Card>
-              <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                      All Sent Messages
-                  </Typography>
-                  <Box marginBottom={2}>
-                      <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={getAllMessages}
-                          fullWidth
-                      >
-                          Fetch Messages
-                      </Button>
-                  </Box>
-                  <List>
-                      {allMessages.map((message, index) => (
-                          <ListItem key={index}>
-                              <ListItemText
-                                  primary={`Recipient: ${message.to}`}
-                                  secondary={`Message: ${message.text.body}`} />
-                          </ListItem>
-                      ))}
-                  </List>
-              </CardContent>
-          </Card></>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12} sm={8} md={6}>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              Send WhatsApp Message
+            </Typography>
+            <Box display="flex" flexDirection="column" alignItems="stretch" marginBottom={2}>
+              <TextField
+                label="Recipient Phone Number"
+                variant="outlined"
+                value={newRecipientNumber}
+                onChange={(e) => setNewRecipientNumber(e.target.value)}
+                fullWidth
+                margin="normal" />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={addRecipientNumber}
+                style={{ marginTop: '8px' }}
+              >
+                Add
+              </Button>
+            </Box>
+            <Box marginBottom={2}>
+              {recipientNumbers.map((number, index) => (
+                <Chip
+                  key={index}
+                  label={number}
+                  onDelete={() => removeRecipientNumber(index)}
+                  deleteIcon={<DeleteIcon />}
+                  style={{ marginRight: '8px', marginBottom: '8px' }} />
+              ))}
+            </Box>
+            <TextField
+              label="Message Content"
+              variant="outlined"
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+              fullWidth
+              multiline
+              rows={4}
+              margin="normal" />
+            <Box display="flex" justifyContent="space-between" marginTop={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={sendWhatsAppMessage}
+                disabled={recipientNumbers.length === 0}
+              >
+                Send Message
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                component="label"
+              >
+                Import from CSV
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={importRecipientsFromCSV}
+                  style={{ display: 'none' }} />
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 
